@@ -1,0 +1,25 @@
+{
+  "name": "clab-apply-mcp",
+  "version": "0.1.0",
+  "description": "C-Lab 코어팀 지원 MCP 서버",
+  "type": "module",
+  "bin": {
+    "clab-apply-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --loader ts-node/esm src/index.ts",
+    "start": "node dist/index.js",
+    "vercel-build": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "googleapis": "^144.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}

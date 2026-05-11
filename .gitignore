@@ -1,0 +1,7 @@
+node_modules/
+dist/
+credentials/
+*.json.local
+.env
+.env.local
+api/*.js
