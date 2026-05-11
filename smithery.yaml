@@ -1,0 +1,5 @@
+name: clab-apply
+description: C-Lab 코어팀 지원서를 MCP를 통해 제출합니다.
+remote:
+  url: https://clab-apply-mcp.vercel.app/mcp
+  transport: streamable-http
