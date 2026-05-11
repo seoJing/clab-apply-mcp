@@ -1,5 +1,7 @@
 {
   "framework": null,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "functions": {
     "api/mcp.ts": {
       "memory": 256,
