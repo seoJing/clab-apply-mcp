@@ -1,51 +1,24 @@
 # clab-apply-mcp
 
-C-Lab 코어팀 지원을 위한 MCP 서버. Claude Code 등 AI 도구에 연결하면 지원서 제출까지 자동으로 처리해줍니다.
+C-Lab 코어팀 지원을 위한 MCP 서버. Claude Code에 연결하면 지원서 제출까지 자동으로 처리해줍니다.
 
 ## 설치
 
-### 1. Claude Code에 MCP 서버 등록
+### Smithery로 한 번에 설치
 
-`~/.claude/claude_desktop_config.json` (또는 `settings.json`) 에 아래 내용을 추가하세요.
+[https://smithery.ai/servers/tjwlsrb1021/Clab](https://smithery.ai/servers/tjwlsrb1021/Clab)
 
-**npx 방식 (설치 불필요):**
-```json
-{
-  "mcpServers": {
-    "clab-apply": {
-      "command": "npx",
-      "args": ["-y", "clab-apply-mcp"]
-    }
-  }
-}
-```
+또는 CLI:
 
-**로컬 클론 방식:**
 ```bash
-git clone https://github.com/seojing/clab-apply-mcp.git
-cd clab-apply-mcp
-npm install && npm run build
+npx @smithery/cli install tjwlsrb1021/Clab --client claude
 ```
-```json
-{
-  "mcpServers": {
-    "clab-apply": {
-      "command": "node",
-      "args": ["/절대경로/clab-apply-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-### 2. Claude Code 재시작
-
-설정 저장 후 Claude Code를 재시작하면 `submit_application` 툴이 활성화됩니다.
 
 ---
 
 ## 지원서 제출 방법
 
-Claude Code 채팅창에 아래처럼 입력하세요:
+설치 후 Claude Code 채팅창에 아래처럼 입력하세요:
 
 ```
 C-Lab 코어팀 프론트엔드 포지션에 지원하고 싶어.
