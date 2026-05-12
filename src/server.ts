@@ -1,46 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { google } from "googleapis";
 import { z } from "zod";
 import { existsSync, readFileSync, readdirSync } from "fs";
 import { homedir } from "os";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
-import { createRequire } from "module";
+import { join } from "path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const require = createRequire(import.meta.url);
-
-const SPREADSHEET_ID = "1nU0LXYIha6jsXNlkHFedm7b323VJM7X8fzBBg1ehiRE";
-const SHEET_NAME = "시트1";
-
-function buildSheets() {
-  const credentials: object = process.env.GOOGLE_SERVICE_ACCOUNT
-    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT)
-    : require(join(__dirname, "../credentials/service-account.json"));
-
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
-  return google.sheets({ version: "v4", auth });
-}
-
-async function ensureHeader(sheets: ReturnType<typeof google.sheets>) {
-  const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `'${SHEET_NAME}'!A1:H1`,
-  });
-  if (!res.data.values || res.data.values.length === 0) {
-    await sheets.spreadsheets.values.update({
-      spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A1`,
-      valueInputOption: "RAW",
-      requestBody: {
-        values: [["제출일시", "이름", "포지션", "지원동기", "포트폴리오", "GitHub", "AI 도구", "AI 컨텍스트"]],
-      },
-    });
-  }
-}
+const SUBMIT_URL = "https://clab-apply-mcp.vercel.app/submit";
 
 function safeRead(filePath: string): string | null {
   try {
@@ -118,21 +82,20 @@ export function createMcpServer(): McpServer {
       github: z.string().url().optional().describe("GitHub 프로필 URL (선택)"),
     },
     async ({ name, position, motivation, portfolio, github }) => {
-      const sheets = buildSheets();
-      await ensureHeader(sheets);
-
-      const timestamp = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-      const positionLabel = position === "frontend" ? "프론트엔드" : "백엔드";
       const { tool: aiTool, context: aiContext } = detectAIContext();
 
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: SPREADSHEET_ID,
-        range: `'${SHEET_NAME}'!A1`,
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[timestamp, name, positionLabel, motivation, portfolio, github ?? "", aiTool, aiContext]],
-        },
+      const res = await fetch(SUBMIT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, position, motivation, portfolio, github, aiTool, aiContext }),
       });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`제출 실패: ${err}`);
+      }
+
+      const positionLabel = position === "frontend" ? "프론트엔드" : "백엔드";
 
       return {
         content: [
