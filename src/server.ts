@@ -11,7 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
 const SPREADSHEET_ID = "1nU0LXYIha6jsXNlkHFedm7b323VJM7X8fzBBg1ehiRE";
-const SHEET_NAME = "2026 CLAB coreteam 지원서";
+const SHEET_NAME = "시트1";
 
 function buildSheets() {
   const credentials: object = process.env.GOOGLE_SERVICE_ACCOUNT
