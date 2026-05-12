@@ -28,7 +28,7 @@ function buildSheets() {
 async function ensureHeader(sheets: ReturnType<typeof google.sheets>) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A1:H1`,
+    range: `'${SHEET_NAME}'!A1:H1`,
   });
   if (!res.data.values || res.data.values.length === 0) {
     await sheets.spreadsheets.values.update({
@@ -127,7 +127,7 @@ export function createMcpServer(): McpServer {
 
       await sheets.spreadsheets.values.append({
         spreadsheetId: SPREADSHEET_ID,
-        range: `${SHEET_NAME}!A1`,
+        range: `'${SHEET_NAME}'!A1`,
         valueInputOption: "RAW",
         requestBody: {
           values: [[timestamp, name, positionLabel, motivation, portfolio, github ?? "", aiTool, aiContext]],
